@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os/exec"
 
 	"github.com/brotherlogic/goserver"
 	"golang.org/x/net/context"
@@ -53,6 +54,11 @@ func (s *Server) GetState() []*pbg.State {
 	}
 }
 
+func (s *Server) buildDash() {
+	// Kick off a refresh
+	exec.Command("sudo", "/etc/init.d/lightdm", "restart").Run()
+}
+
 func main() {
 	var quiet = flag.Bool("quiet", false, "Show all output")
 	flag.Parse()
@@ -70,6 +76,8 @@ func main() {
 	if err != nil {
 		return
 	}
+
+	server.buildDash()
 
 	fmt.Printf("%v", server.Serve())
 }
