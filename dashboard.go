@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"time"
 
 	"github.com/brotherlogic/goserver"
 	"golang.org/x/net/context"
@@ -56,7 +57,9 @@ func (s *Server) GetState() []*pbg.State {
 
 func (s *Server) buildDash() {
 	// Kick off a refresh
-	exec.Command("sudo", "/etc/init.d/lightdm", "restart").Run()
+	out, err := exec.Command("sudo", "/etc/init.d/lightdm", "restart").Output()
+	time.Sleep(time.Second * 3)
+	s.Log(fmt.Sprintf("%v and %v", out, err))
 }
 
 func main() {
