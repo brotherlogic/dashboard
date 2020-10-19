@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"time"
 
@@ -90,8 +91,12 @@ func main() {
 		return
 	}
 	client := fcpb.NewFileCopierServiceClient(conn)
+
+	//Make a local copy of the file
+	data, _ := Asset("index.pb")
+	ioutil.WriteFile("/tmp/index.html", data, 0644)
 	_, err = client.Copy(ctx, &fcpb.CopyRequest{
-		InputFile:    "/home/simon/gobuild/src/github.com/brotherlogic/filecopier/index.html",
+		InputFile:    "/tmp/index.html",
 		InputServer:  "stack1",
 		OutputFile:   "/var/www/html/dashboard/index.html",
 		OutputServer: "root@www.brotherlogic.com",
@@ -101,6 +106,7 @@ func main() {
 	}
 	cancel()
 	conn.Close()
+	os.Remove("/tmp/index.html")
 
 	server.buildDash()
 
