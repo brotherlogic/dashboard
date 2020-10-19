@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package dashboard;
+
+option go_package = "github.com/brotherlogic/dashboard/proto";
+
+message GetDataRequest {}
+
+message GetDataResponse {
+  string display = 1;
+}
+
+service DashboardService {
+  rpc GetData(GetDataRequest) returns (GetDataResponse) {};
+}

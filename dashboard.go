@@ -13,6 +13,7 @@ import (
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
+	pb "github.com/brotherlogic/dashboard/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
 )
 
@@ -31,7 +32,7 @@ func Init() *Server {
 
 // DoRegister does RPC registration
 func (s *Server) DoRegister(server *grpc.Server) {
-
+	pb.RegisterDashboardServiceServer(server, s)
 }
 
 // ReportHealth alerts if we're not healthy
