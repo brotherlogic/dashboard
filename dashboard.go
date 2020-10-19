@@ -6,12 +6,15 @@ import (
 	"io/ioutil"
 	"log"
 	"os/exec"
+	"time"
 
 	"github.com/brotherlogic/goserver"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 
+	fcpb "github.com/brotherlogic/filecopier/proto"
 	pbg "github.com/brotherlogic/goserver/proto"
+	"github.com/brotherlogic/goserver/utils"
 )
 
 //Server main server type
@@ -76,6 +79,26 @@ func main() {
 	if err != nil {
 		return
 	}
+
+	//Upload the file to the remote
+	ctx, cancel := utils.ManualContext("db-ul", "db-ul", time.Minute, true)
+	conn, err := server.FDialServer(ctx, "filecopier")
+	if err != nil {
+		server.Log(fmt.Sprintf("Bad dial: %v", err))
+		return
+	}
+	client := fcpb.NewFileCopierServiceClient(conn)
+	_, err = client.Copy(ctx, &fcpb.CopyRequest{
+		InputFile:    "/home/simon/gobuild/src/github.com/brotherlogic/filecopier/index.html",
+		InputServer:  "stack1",
+		OutputFile:   "/var/www/html/dashboard/index.html",
+		OutputServer: "root@www.brotherlogic.com",
+	})
+	if err != nil {
+		log.Fatalf("Bad copy: %v", err)
+	}
+	cancel()
+	conn.Close()
 
 	server.buildDash()
 
