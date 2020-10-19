@@ -86,7 +86,7 @@ func main() {
 	time.Sleep(time.Second * 2)
 	data, erra := Asset("index.html")
 	ioutil.WriteFile("/tmp/index.html", data, 0644)
-	r, err := exec.Command("scp", "/tmp/index.html", "root@www.brotherlogic.com:/var/www/html/dashboard/index.htm").Output()
+	r, err := exec.Command("scp", "/tmp/index.html", "root@www.brotherlogic.com:/var/www/html/dashboard/index.html").Output()
 	server.Log(fmt.Sprintf("%v -> %v (%v)", string(r), err, erra))
 	os.Remove("/tmp/index.html")
 
