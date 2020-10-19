@@ -60,7 +60,7 @@ func (s *Server) buildDash() {
 	// Kick off a refresh
 	out, err := exec.Command("sudo", "/etc/init.d/lightdm", "restart").Output()
 	time.Sleep(time.Second * 3)
-	s.Log(fmt.Sprintf("%v and %v", out, err))
+	s.Log(fmt.Sprintf("%v and %v", string(out), err))
 }
 
 func main() {
@@ -85,7 +85,7 @@ func main() {
 	data, _ := Asset("index.pb")
 	ioutil.WriteFile("/tmp/index.html", data, 0644)
 	r, err := exec.Command("scp", "/tmp/index.html", "root@www.brotherlogic.com:/var/www/html/dashboard/index.htm").Output()
-	server.Log(fmt.Sprintf("%v -> %v", r, err))
+	server.Log(fmt.Sprintf("%v -> %v", string(r), err))
 	os.Remove("/tmp/index.html")
 
 	server.buildDash()
