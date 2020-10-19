@@ -84,7 +84,7 @@ func main() {
 
 	//Upload the file to the remote
 	time.Sleep(time.Second * 2)
-	data, erra := Asset("index.pb")
+	data, erra := Asset("index.html")
 	ioutil.WriteFile("/tmp/index.html", data, 0644)
 	r, err := exec.Command("scp", "/tmp/index.html", "root@www.brotherlogic.com:/var/www/html/dashboard/index.htm").Output()
 	server.Log(fmt.Sprintf("%v -> %v (%v)", string(r), err, erra))
